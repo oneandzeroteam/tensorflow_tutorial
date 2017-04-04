@@ -1,20 +1,27 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-
+# 손글씨 0~9
 
 #Placeholder
+# 직접 넣어주는 데이터 / 손글씨 28x28 그림한장, 정답 (0 0 1 0 0 0 0 0 0 0) -> 0
 x = tf.placeholder(tf.float32, [None, 784])
+y_ = tf.placeholder(tf.float32, [None, 10])
+
+# Variable
+# 입력값 784 -> w(784x10) -> 10x1 + b -> output
 W = tf.Variable(tf.zeros([784, 10]))
 b = tf.Variable(tf.zeros([10]))
-y_ = tf.placeholder(tf.float32, [None, 10])
 
 #Graph
 z = tf.matmul(x, W) + b
 y = tf.nn.softmax(z)
+# output_z -> 확률값으로(softmax) -> y
 cross_entropy = tf.reduce_mean(
       tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
+# 답하고 차이의 평균값
 train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+# train_step -> 학습
 
 #Session
 init = tf.global_variables_initializer()
